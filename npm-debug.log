@@ -1,0 +1,42 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'i',
+1 verbose cli   'hapi',
+1 verbose cli   '--save' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.36
+4 verbose cache add [ 'hapi', null ]
+5 verbose cache add name=undefined spec="hapi" args=["hapi",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'hapi',
+6 verbose parsed url   path: 'hapi',
+6 verbose parsed url   href: 'hapi' }
+7 silly lockFile 04ea8046-hapi hapi
+8 verbose lock hapi /home/diogo/.npm/04ea8046-hapi.lock
+9 silly lockFile 04ea8046-hapi hapi
+10 error Error: Attempt to unlock hapi, which hasn't been locked
+10 error     at unlock (/usr/local/lib/node_modules/npm/lib/utils/locker.js:44:11)
+10 error     at cb (/usr/local/lib/node_modules/npm/lib/cache/add-local.js:30:5)
+10 error     at /usr/local/lib/node_modules/npm/lib/cache/add-local.js:47:20
+10 error     at /usr/local/lib/node_modules/npm/lib/utils/locker.js:30:7
+10 error     at cb (/usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+10 error     at /usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+10 error     at Object.oncomplete (fs.js:108:15)
+11 error If you need help, you may report this *entire* log,
+11 error including the npm and node versions, at:
+11 error     <http://github.com/npm/npm/issues>
+12 error System Linux 3.11.0-12-generic
+13 error command "/usr/local/bin/node" "/usr/local/bin/npm" "i" "hapi" "--save"
+14 error cwd /home/diogo/Desktop/pong
+15 error node -v v0.10.36
+16 error npm -v 1.4.28
+17 verbose exit [ 1, true ]
