@@ -1,0 +1,15 @@
+Hapi = require("hapi")
+
+server = new Hapi.Server()
+server.connection port: 80
+
+server.route
+  method: "GET"
+  path: "/{path*}"
+  config:
+    handler:
+      directory:
+        path: "./public/"
+
+server.start ->
+    console.log "Server running at:", server.info.uri
