@@ -1,9 +1,17 @@
-exec = child_process.exec
-Hapi = require("hapi")
+exec = require("child_process").exec
+Hapi = require "hapi"
 
 exec "npm i", ->
   server = new Hapi.Server()
   server.connection port: 8080
+
+  server.route
+    method: "GET"
+    path: "/"
+    config:
+      handler:
+        file: "./public/templates/index.html"
+
 
   server.route
     method: "GET"
