@@ -10,12 +10,10 @@ isDev = process.argv[2];
 exec("npm i", function() {
   if (isDev) {
     return exec("jade .", function() {
-      return exec("sass .", function() {
-        return exec("rm -rf ./public/js/app", function() {
-          return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
-            return exec("coffee -cb ./public/js/app", function() {
-              return startServer();
-            });
+      return exec("rm -rf ./public/js/app", function() {
+        return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
+          return exec("coffee -cb ./public/js/app", function() {
+            return startServer();
           });
         });
       });

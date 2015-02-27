@@ -1,7 +1,21 @@
 #= require Player
 
+keyCodes =
+  w: 87
+  s: 83
+
+events = {}
+screen = null;
+
 $ ->
+  $(document).on "keydown", (event) ->
+    events[event.keyCode] = true
+
+  $(document).on "keyup", (event) ->
+    events[event.keyCode] = false
+
+  screen = $ ".screen"
   player1 = new Player $ "#player1"
-  console.log player1.x()
-  setTimeout((() ->
-    player1.x(100)), 2000)
+  setInterval( ->
+    player1.update()
+  , 100 / 6)
