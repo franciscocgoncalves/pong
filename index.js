@@ -9,6 +9,7 @@ exec("npm i", function() {
   var server;
   server = new Hapi.Server();
   server.connection({
+    address: "0.0.0.0",
     port: 8080
   });
   server.route({

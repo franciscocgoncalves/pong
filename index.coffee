@@ -3,7 +3,7 @@ Hapi = require "hapi"
 
 exec "npm i", ->
   server = new Hapi.Server()
-  server.connection port: 8080
+  server.connection address: "0.0.0.0", port: 8080
 
   server.route
     method: "GET"
