@@ -8,6 +8,14 @@ Object = (function() {
     this.el = el;
   }
 
+  Object.prototype.color = function(color) {
+    if (color != null) {
+      return this.el.css("background-color", color);
+    } else {
+      return this.el.css("background-color");
+    }
+  };
+
   Object.prototype.x = function(x) {
     if (x != null) {
       this.el.css("left", x);
@@ -88,10 +96,17 @@ Object = (function() {
 Player = (function(superClass) {
   extend(Player, superClass);
 
-  function Player(el) {
+  function Player(el, self) {
     this.el = el;
     Player.__super__.constructor.call(this, this.el);
     this.y(pongScreen.height / 2 - this.height() / 2);
+    if ((self != null)) {
+      this.x(20);
+      this.color("green");
+    } else {
+      this.x(pongScreen.width - this.width() - 20);
+      this.color("red");
+    }
   }
 
   Player.prototype.moveUp = function() {
@@ -134,14 +149,15 @@ pongScreen = {
 };
 
 $(function() {
-  var player1;
+  var player1, player2;
   $(document).on("keydown", function(event) {
     return events[event.keyCode] = true;
   });
   $(document).on("keyup", function(event) {
     return events[event.keyCode] = false;
   });
-  player1 = new Player($("#player1"));
+  player1 = new Player($("#player1"), true);
+  player2 = new Player($("#player2"));
   return setInterval(function() {
     return player1.update();
   }, 100 / 6);

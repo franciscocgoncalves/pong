@@ -1,6 +1,12 @@
 class Object
   constructor: (@el) ->
 
+  color: (color) ->
+    if color?
+      @el.css("background-color", color)
+    else
+      @el.css("background-color")
+
   x: (x) ->
     @el.css("left", x) if x?
     parseFloat @el.css "left"

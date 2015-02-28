@@ -14,7 +14,9 @@ $ ->
   $(document).on "keyup", (event) ->
     events[event.keyCode] = false
 
-  player1 = new Player $ "#player1"
+  player1 = new Player($("#player1"), true)
+  player2 = new Player($("#player2"))
+
   setInterval( ->
     player1.update()
   , 100 / 6)
