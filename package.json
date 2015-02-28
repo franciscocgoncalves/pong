@@ -9,7 +9,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "node index.js",
-    "s": "coffee -cb index.coffee && nodemon -e jade,sass,coffee index.js true",
+    "s": "coffee -cb index.coffee && nodemon -e coffee index.js true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
