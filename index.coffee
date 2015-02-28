@@ -2,17 +2,6 @@ exec = require("child_process").exec
 Hapi = require "hapi"
 SocketIO = require "socket.io"
 
-isDev = process.argv[2]
-
-if isDev
-  exec "jade -w ."
-  exec "sass -w ."
-  exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
-    exec "coffee -cb ./public/js/app", ->
-      startServer()
-else
-  startServer()
-
 startServer = ->
   server = new Hapi.Server()
   server.connection address: "0.0.0.0", port: 80
@@ -59,3 +48,14 @@ startServer = ->
 
   server.start ->
       console.log "Server running at:", server.info.uri
+
+isDev = process.argv[2]
+
+if isDev
+  exec "jade -w ."
+  exec "sass -w ."
+  exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
+    exec "coffee -cb ./public/js/app", ->
+      startServer()
+else
+  startServer()
