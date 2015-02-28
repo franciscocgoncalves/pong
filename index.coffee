@@ -4,16 +4,14 @@ SocketIO = require "socket.io"
 
 isDev = process.argv[2]
 
-exec "npm prune", ->
-  exec "npm i", ->
-    if isDev
-      exec "jade -w ."
-      exec "sass -w ."
-      exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
-        exec "coffee -cb ./public/js/app", ->
-          startServer()
-    else
+if isDev
+  exec "jade -w ."
+  exec "sass -w ."
+  exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
+    exec "coffee -cb ./public/js/app", ->
       startServer()
+else
+  startServer()
 
 startServer = ->
   server = new Hapi.Server()
