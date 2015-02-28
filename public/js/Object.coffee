@@ -39,3 +39,27 @@ class Object
       @moveDown()
 
     @updated = @updated + @delta
+
+  width: ->
+    @el.width()
+
+  height: ->
+    @el.height()
+
+  left: ->
+    @x()
+
+  right: ->
+    @x() + @width()
+
+  up: ->
+    @y() + @height()
+
+  down: ->
+   @y()
+
+  checkColision: (o) ->
+
+    if ( o.left() >= @left() && o.left() <= @right() || o.right() <= @right() && o.right() >= @left() ) && (o.up() <= @up() && o.up() >= @down() || o.down() >= @down() && o.down() <= @up() )
+      return true
+    return false
