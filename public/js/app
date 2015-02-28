@@ -1,5 +1,5 @@
 class Object
-  constructor: (@el, @speed = x: 0, y: 0) ->
+  constructor: (@el) ->
 
   x: (x) ->
     @el.css("left", x) if x?
@@ -8,24 +8,17 @@ class Object
   y: (y) ->
     @el.css("bottom", y + "px") if y?
     parseFloat @el.css "bottom"
-<<<<<<< HEAD
 
-  moveY: ->
-    finalY = @y() + @speed.y * @delta / 1000
+  move: (speed) ->
+    speed = speed || @speed || x: 0, y: 0
+
+    finalY = @y() + speed.y * @delta / 1000
     if finalY < 0
       @y 0
-    else if finalY + @el.height() > screen.height
-      @y screen.height
+    else if finalY + @height() > pongScreen.height
+      @y pongScreen.height - @height()
     else
       @y finalY
-
-  moveUp: ->
-    @speed.y = Math.abs @speed.y
-    @moveY()
-
-  moveDown: ->
-    @speed.y = - Math.abs @speed.y
-    @moveY()
 
   update: ->
     if !@updated?
@@ -34,45 +27,53 @@ class Object
 
     @delta = Date.now() - @updated
 
-    if events[keyCodes.w]
-      @moveUp()
-    if events[keyCodes.s]
-      @moveDown()
+    @_update()
 
     @updated = @updated + @delta
 
-=======
-  
+  _update: ->
+
   width: ->
     @el.width()
-    
-  height: -> 
+
+  height: ->
     @el.height()
-    
+
   left: ->
     @x()
-    
-  right: ->  
+
+  right: ->
     @x() + @width()
-    
+
   up: ->
     @y() + @height()
-    
+
   down: ->
    @y()
-    
+
   checkColision: (o) ->
-    
     if ( o.left() >= @left() && o.left() <= @right() || o.right() <= @right() && o.right() >= @left() ) && (o.up() <= @up() && o.up() >= @down() || o.down() >= @down() && o.down() <= @up() )
       return true
     return false
-    
->>>>>>> 2df9d167e9d1ea2708fbaf2c2709a6c269afff23
+
 
 
 class Player extends Object
   constructor: (@el) ->
-    super @el, x: 0, y: 200
+    super @el
+    @y(pongScreen.height / 2 - @height() / 2)
+
+  moveUp: ->
+    @move x: 0, y: 200
+
+  moveDown: ->
+    @move x: 0, y: -200
+
+  _update: ->
+    if events[keyCodes.w]
+      @moveUp()
+    if events[keyCodes.s]
+      @moveDown()
 
 
 
@@ -81,7 +82,7 @@ keyCodes =
   s: 83
 
 events = {}
-screen = null;
+pongScreen = width: 854, height: 480
 
 $ ->
   $(document).on "keydown", (event) ->
@@ -90,18 +91,11 @@ $ ->
   $(document).on "keyup", (event) ->
     events[event.keyCode] = false
 
-  screen = $ ".screen"
   player1 = new Player $ "#player1"
-<<<<<<< HEAD
   setInterval( ->
     player1.update()
   , 100 / 6)
-=======
-  console.log player1.x()
-  setTimeout((() ->
-    player1.x(100)
-    ), 2000)
 
->>>>>>> 2df9d167e9d1ea2708fbaf2c2709a6c269afff23
+
 
 class Ball extends Object

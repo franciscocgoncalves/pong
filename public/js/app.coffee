@@ -5,7 +5,7 @@ keyCodes =
   s: 83
 
 events = {}
-screen = null;
+pongScreen = width: 854, height: 480
 
 $ ->
   $(document).on "keydown", (event) ->
@@ -14,7 +14,6 @@ $ ->
   $(document).on "keyup", (event) ->
     events[event.keyCode] = false
 
-  screen = $ ".screen"
   player1 = new Player $ "#player1"
   setInterval( ->
     player1.update()
