@@ -5,7 +5,7 @@ SocketIO = require "socket.io"
 isDev = process.argv[2]
 
 exec "npm prune", ->
-  exec "npm i", ->
+  exec "sudo npm i", ->
     if isDev
       exec "jade -w ."
       exec "sass -w ."
