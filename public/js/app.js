@@ -98,9 +98,10 @@ Player = (function(superClass) {
 
   function Player(el, self) {
     this.el = el;
+    this.self = self;
     Player.__super__.constructor.call(this, this.el);
     this.y(pongScreen.height / 2 - this.height() / 2);
-    if ((self != null)) {
+    if (this.self != null) {
       this.x(20);
       this.color("green");
     } else {
@@ -124,11 +125,20 @@ Player = (function(superClass) {
   };
 
   Player.prototype._update = function() {
-    if (events[keyCodes.w]) {
-      this.moveUp();
-    }
-    if (events[keyCodes.s]) {
-      return this.moveDown();
+    if (this.self != null) {
+      if (events[keyCodes.w]) {
+        this.moveUp();
+      }
+      if (events[keyCodes.s]) {
+        return this.moveDown();
+      }
+    } else {
+      if (events.other[keyCodes.w]) {
+        this.moveUp();
+      }
+      if (events.other[keyCodes.s]) {
+        return this.moveDown();
+      }
     }
   };
 
@@ -141,7 +151,9 @@ keyCodes = {
   s: 83
 };
 
-events = {};
+events = {
+  other: {}
+};
 
 pongScreen = {
   width: 854,
@@ -149,18 +161,32 @@ pongScreen = {
 };
 
 $(function() {
-  var player1, player2;
-  $(document).on("keydown", function(event) {
-    return events[event.keyCode] = true;
-  });
-  $(document).on("keyup", function(event) {
-    return events[event.keyCode] = false;
-  });
-  player1 = new Player($("#player1"), true);
-  player2 = new Player($("#player2"));
-  return setInterval(function() {
-    return player1.update();
+  var objects, socket;
+  objects = [new Player($("#player1"), true), new Player($("#player2"))];
+  setInterval(function() {
+    var i, len, object, results;
+    results = [];
+    for (i = 0, len = objects.length; i < len; i++) {
+      object = objects[i];
+      results.push(object.update());
+    }
+    return results;
   }, 100 / 6);
+  socket = io("http://localhost");
+  socket.on("keydown", function(data) {
+    return events.other[data] = true;
+  });
+  socket.on("keyup", function(data) {
+    return events.other[data] = false;
+  });
+  $(document).on("keydown", function(event) {
+    events[event.keyCode] = true;
+    return socket.emit("keydown", event.keyCode);
+  });
+  return $(document).on("keyup", function(event) {
+    events[event.keyCode] = false;
+    return socket.emit("keyup", event.keyCode);
+  });
 });
 
 Ball = (function(superClass) {

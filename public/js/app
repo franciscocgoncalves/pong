@@ -65,11 +65,11 @@ class Object
 
 
 class Player extends Object
-  constructor: (@el, self) ->
+  constructor: (@el, @self) ->
     super @el
     @y(pongScreen.height / 2 - @height() / 2)
 
-    if (self?)
+    if @self?
       @x(20)
       @color("green")
     else
@@ -83,10 +83,16 @@ class Player extends Object
     @move x: 0, y: -200
 
   _update: ->
-    if events[keyCodes.w]
-      @moveUp()
-    if events[keyCodes.s]
-      @moveDown()
+    if @self?
+      if events[keyCodes.w]
+        @moveUp()
+      if events[keyCodes.s]
+        @moveDown()
+    else
+      if events.other[keyCodes.w]
+        @moveUp()
+      if events.other[keyCodes.s]
+        @moveDown()
 
 
 
@@ -94,22 +100,34 @@ keyCodes =
   w: 87
   s: 83
 
-events = {}
+events = other: {}
 pongScreen = width: 854, height: 480
 
 $ ->
+  objects = [
+    new Player($("#player1"), true)
+    new Player($("#player2"))
+  ]
+
+  setInterval( ->
+    object.update() for object in objects
+  , 100 / 6)
+
+  socket = io "http://localhost"
+
+  socket.on "keydown", (data) ->
+    events.other[data] = true
+
+  socket.on "keyup", (data) ->
+    events.other[data] = false
+
   $(document).on "keydown", (event) ->
     events[event.keyCode] = true
+    socket.emit "keydown", event.keyCode
 
   $(document).on "keyup", (event) ->
     events[event.keyCode] = false
-
-  player1 = new Player($("#player1"), true)
-  player2 = new Player($("#player2"))
-
-  setInterval( ->
-    player1.update()
-  , 100 / 6)
+    socket.emit "keyup", event.keyCode
 
 
 
