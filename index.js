@@ -11,11 +11,9 @@ exec("npm i", function() {
   if (isDev) {
     exec("jade -w .");
     exec("sass -w .");
-    return exec("rm -rf ./public/js/app", function() {
-      return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
-        return exec("coffee -cb ./public/js/app", function() {
-          return startServer();
-        });
+    return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
+      return exec("coffee -cb ./public/js/app", function() {
+        return startServer();
       });
     });
   } else {

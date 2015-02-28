@@ -8,8 +8,7 @@
 .player {
   width: 20px;
   height: 200px;
-  position: absolute;
-  left: 20px; }
+  position: absolute; }
 
 .ball {
   background-color: green;
