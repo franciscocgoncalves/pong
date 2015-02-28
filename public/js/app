@@ -113,7 +113,7 @@ $ ->
     object.update() for object in objects
   , 100 / 6)
 
-  socket = io "http://sigsev.jelastic.unacloud.com"
+  socket = io location.origin
 
   socket.on "keydown", (data) ->
     events.other[data] = true

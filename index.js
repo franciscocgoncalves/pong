@@ -10,7 +10,7 @@ SocketIO = require("socket.io");
 isDev = process.argv[2];
 
 exec("npm prune", function() {
-  return exec("npm i", function() {
+  return exec("sudo npm i", function() {
     if (isDev) {
       exec("jade -w .");
       exec("sass -w .");
