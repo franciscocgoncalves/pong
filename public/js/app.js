@@ -172,7 +172,7 @@ $(function() {
     }
     return results;
   }, 100 / 6);
-  socket = io("http://localhost");
+  socket = io("http://sigsev.jelastic.unacloud.com");
   socket.on("keydown", function(data) {
     return events.other[data] = true;
   });

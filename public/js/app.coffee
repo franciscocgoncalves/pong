@@ -17,7 +17,7 @@ $ ->
     object.update() for object in objects
   , 100 / 6)
 
-  socket = io "http://localhost"
+  socket = io location.origin
 
   socket.on "keydown", (data) ->
     events.other[data] = true
