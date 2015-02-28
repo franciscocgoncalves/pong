@@ -7,6 +7,22 @@ Hapi = require("hapi");
 
 SocketIO = require("socket.io");
 
+isDev = process.argv[2];
+
+exec("npm i", function() {
+  if (isDev) {
+    exec("jade -w .");
+    exec("sass -w .");
+    return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
+      return exec("coffee -cb ./public/js/app", function() {
+        return startServer();
+      });
+    });
+  } else {
+    return startServer();
+  }
+});
+
 startServer = function() {
   var games, io, server;
   server = new Hapi.Server();
@@ -85,17 +101,3 @@ startServer = function() {
     return console.log("Server running at:", server.info.uri);
   });
 };
-
-isDev = process.argv[2];
-
-if (isDev) {
-  exec("jade -w .");
-  exec("sass -w .");
-  exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
-    return exec("coffee -cb ./public/js/app", function() {
-      return startServer();
-    });
-  });
-} else {
-  startServer();
-}
