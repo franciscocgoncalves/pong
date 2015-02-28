@@ -5,11 +5,12 @@ isDev = process.argv[2]
 
 exec "npm i", ->
   if isDev
-    exec "jade .", ->
-      exec "rm -rf ./public/js/app", ->
-        exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
-          exec "coffee -cb ./public/js/app", ->
-            startServer()
+    exec "jade -w ."
+    exec "sass -w ."
+    exec "rm -rf ./public/js/app", ->
+      exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
+        exec "coffee -cb ./public/js/app", ->
+          startServer()
   else
     startServer()
 
