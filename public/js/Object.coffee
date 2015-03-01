@@ -8,7 +8,7 @@ class Object
       @el.css("background-color")
 
   x: (x) ->
-    @el.css("left", x) if x?
+    @el.css("left", x + "px") if x?    
     parseFloat @el.css "left"
 
   y: (y) ->
@@ -17,14 +17,27 @@ class Object
 
   move: (speed) ->
     speed = speed || @speed || x: 0, y: 0
-
+    
     finalY = @y() + speed.y * @delta / 1000
-    if finalY < 0
-      @y 0
+    finalX = @x() + speed.x * @delta / 1000            
+                
+    if finalY < 0 
+      @y(0)
+      @collisionY()
     else if finalY + @height() > pongScreen.height
       @y pongScreen.height - @height()
+      @collisionY()
     else
       @y finalY
+      
+    if finalX < 0 
+      @x(0)
+      @collisionX(leftPlayer)
+    else if finalX + @width() > pongScreen.width
+      @x pongScreen.width - @width()
+      @collisionX(rightPlayer)
+    else
+      @x finalX
 
   update: ->
     if !@updated?
@@ -57,7 +70,11 @@ class Object
   down: ->
    @y()
 
-  checkColision: (o) ->
-    if ( o.left() >= @left() && o.left() <= @right() || o.right() <= @right() && o.right() >= @left() ) && (o.up() <= @up() && o.up() >= @down() || o.down() >= @down() && o.down() <= @up() )
-      return true
-    return false
+  checkCollision: (o) ->
+    if(o.left() > @right() || o.right() < @left() || o.down() > @up() || o.up() < @down())
+      return false
+    return true
+    
+  collisionX: (p) ->
+  
+  collisionY: ->

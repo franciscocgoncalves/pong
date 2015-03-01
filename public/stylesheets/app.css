@@ -12,14 +12,13 @@
   bottom: 50px; }
 
 .ball {
-  width: 60px;
+  width: 40px;
   height: 60px;
-  border-radius: 50%; }
+  position: absolute; }
 
 .img {
   background-image: url("ovelha_balao.png");
   background-size: contain;
-  background-repeat: no-repeat;
-  background-position: 70%; }
+  background-repeat: no-repeat; }
 
 /*# sourceMappingURL=app.css.map */

@@ -8,7 +8,7 @@ class Object
       @el.css("background-color")
 
   x: (x) ->
-    @el.css("left", x) if x?
+    @el.css("left", x + "px") if x?    
     parseFloat @el.css "left"
 
   y: (y) ->
@@ -17,14 +17,27 @@ class Object
 
   move: (speed) ->
     speed = speed || @speed || x: 0, y: 0
-
+    
     finalY = @y() + speed.y * @delta / 1000
-    if finalY < 0
-      @y 0
+    finalX = @x() + speed.x * @delta / 1000            
+                
+    if finalY < 0 
+      @y(0)
+      @collisionY()
     else if finalY + @height() > pongScreen.height
       @y pongScreen.height - @height()
+      @collisionY()
     else
       @y finalY
+      
+    if finalX < 0 
+      @x(0)
+      @collisionX(leftPlayer)
+    else if finalX + @width() > pongScreen.width
+      @x pongScreen.width - @width()
+      @collisionX(rightPlayer)
+    else
+      @x finalX
 
   update: ->
     if !@updated?
@@ -57,11 +70,14 @@ class Object
   down: ->
    @y()
 
-  checkColision: (o) ->
-    if ( o.left() >= @left() && o.left() <= @right() || o.right() <= @right() && o.right() >= @left() ) && (o.up() <= @up() && o.up() >= @down() || o.down() >= @down() && o.down() <= @up() )
-      return true
-    return false
-
+  checkCollision: (o) ->
+    if(o.left() > @right() || o.right() < @left() || o.down() > @up() || o.up() < @down())
+      return false
+    return true
+    
+  collisionX: (p) ->
+  
+  collisionY: ->
 
 
 class Player extends Object
@@ -90,12 +106,47 @@ class Player extends Object
 
 
 
+class Ball extends Object
+  constructor: (@el, @speed) ->
+    super @el
+    @y(pongScreen.height / 2)
+    @x(pongScreen.width /2)
+
+  _update: ->    
+    @move()
+    if @checkCollision(player1) || @checkCollision(player2) 
+      @speed.x = - @speed.x
+    
+  collisionX: (p) ->
+    @speed.x = - @speed.x
+    
+    if p == leftPlayer
+      scores[rightPlayer]++
+      @restart()
+    else if p == rightPlayer
+      scores[leftPlayer]++
+      @restart()
+    
+  collisionY: ->
+    @speed.y = - @speed.y
+    
+  restart: ->
+    @y(pongScreen.height / 2)
+    @x(pongScreen.width /2)
+
+
+
 keyCodes =
   w: 87
   s: 83
 
 events = {}
 pongScreen = width: 854, height: 480
+leftPlayer = 0
+player1 = null
+player2 = null
+rightPlayer = 1
+scores = [0, 0]
 
 $ ->
   $(document).on "keydown", (event) ->
@@ -106,11 +157,10 @@ $ ->
 
   player1 = new Player($("#player1"), true)
   player2 = new Player($("#player2"))
-
+  ball = new Ball($(".ball"), {x: 200, y: -200})
+  
   setInterval( ->
     player1.update()
+    ball.update()
   , 100 / 6)
 
-
-
-class Ball extends Object
