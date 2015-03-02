@@ -173,19 +173,27 @@ $(function() {
     return results;
   }, 100 / 6);
   socket = io(location.origin);
-  socket.on("keydown", function(data) {
-    return events.other[data] = true;
+  socket.on("keydown", function(keyCode) {
+    events.other[keyCode] = true;
+    return console.log("him: down:", keyCode, Date.now());
   });
-  socket.on("keyup", function(data) {
-    return events.other[data] = false;
+  socket.on("keyup", function(keyCode) {
+    events.other[keyCode] = false;
+    return console.log("him: up:", keyCode, Date.now());
   });
   $(document).on("keydown", function(event) {
-    events[event.keyCode] = true;
-    return socket.emit("keydown", event.keyCode);
+    if (!events[event.keyCode]) {
+      events[event.keyCode] = true;
+      socket.emit("keydown", event.keyCode);
+      return console.log("me: down:", event.keyCode, Date.now());
+    }
   });
   return $(document).on("keyup", function(event) {
-    events[event.keyCode] = false;
-    return socket.emit("keyup", event.keyCode);
+    if (events[event.keyCode]) {
+      events[event.keyCode] = false;
+      socket.emit("keyup", event.keyCode);
+      return console.log("me: up:", event.keyCode, Date.now());
+    }
   });
 });
 

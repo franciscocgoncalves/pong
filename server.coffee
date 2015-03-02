@@ -36,10 +36,12 @@ startServer = ->
       socket.gameId = socket.id
 
     socket.on "keydown", (data) ->
+      console.log socket.id, "down:", data
       for s in games[socket.gameId] when s.id != socket.id
         s.emit "keydown", data
 
     socket.on "keyup", (data) ->
+      console.log socket.id, "up:", data
       for s in games[socket.gameId] when s.id != socket.id
         s.emit "keyup", data
 

@@ -19,16 +19,22 @@ $ ->
 
   socket = io location.origin
 
-  socket.on "keydown", (data) ->
-    events.other[data] = true
+  socket.on "keydown", (keyCode) ->
+    events.other[keyCode] = true
+    console.log "him: down:", keyCode, Date.now()
 
-  socket.on "keyup", (data) ->
-    events.other[data] = false
+  socket.on "keyup", (keyCode) ->
+    events.other[keyCode] = false
+    console.log "him: up:", keyCode, Date.now()
 
   $(document).on "keydown", (event) ->
-    events[event.keyCode] = true
-    socket.emit "keydown", event.keyCode
+    if not events[event.keyCode]
+      events[event.keyCode] = true
+      socket.emit "keydown", event.keyCode
+      console.log "me: down:", event.keyCode, Date.now()
 
   $(document).on "keyup", (event) ->
-    events[event.keyCode] = false
-    socket.emit "keyup", event.keyCode
+    if events[event.keyCode]
+      events[event.keyCode] = false
+      socket.emit "keyup", event.keyCode
+      console.log "me: up:", event.keyCode, Date.now()
