@@ -46,6 +46,9 @@ $ ->
       events[event.keyCode] = !events[event.keyCode]
       socket.emit "keydown", event.keyCode
       console.log "me: down:", event.keyCode, Date.now()
+      
+      if event.keyCode == keyCodes.p
+        $("#paused").toggle()
 
   $(document).on "keyup", (event) ->
     if events[event.keyCode] && event.keyCode != keyCodes.p

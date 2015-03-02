@@ -269,7 +269,10 @@ $(function() {
     if (!events[event.keyCode] || event.keyCode === keyCodes.p) {
       events[event.keyCode] = !events[event.keyCode];
       socket.emit("keydown", event.keyCode);
-      return console.log("me: down:", event.keyCode, Date.now());
+      console.log("me: down:", event.keyCode, Date.now());
+      if (event.keyCode === keyCodes.p) {
+        return $("#paused").toggle();
+      }
     }
   });
   return $(document).on("keyup", function(event) {
