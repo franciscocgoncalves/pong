@@ -62,7 +62,9 @@ Object = (function() {
       return;
     }
     this.delta = Date.now() - this.updated;
-    this._update();
+    if (!events[keyCodes.p]) {
+      this._update();
+    }
     return this.updated = this.updated + this.delta;
   };
 

@@ -19,6 +19,13 @@ $ ->
     new Player($("#player2")),
     new Ball($(".ball"), {x: 200, y: -200})
   ]
+  
+  paused = $("#paused")
+  paused.css("left", pongScreen.width / 2 - paused.width() / 2) 
+  
+  score = $("#score")
+  $("#score").text(scores[0] + " - " + scores[1]); 
+  score.css("left", pongScreen.width / 2 - score.width() / 2)
     
   setInterval( ->
     object.update() for object in objects
@@ -33,8 +40,9 @@ $ ->
     events.other[data] = false
 
   $(document).on "keydown", (event) ->
-    if event.keyCode == keyCodes.p && events[event.keyCode]
+    if event.keyCode == keyCodes.p 
       events[event.keyCode] = !events[event.keyCode]
+      $("#paused").toggle()
     else 
       events[event.keyCode] = true
     socket.emit "keydown", event.keyCode

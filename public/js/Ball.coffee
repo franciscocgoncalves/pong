@@ -23,5 +23,6 @@ class Ball extends Object
     @speed.y = - @speed.y
     
   restart: ->
+    $("#score").text(scores[0] + " - " + scores[1]); 
     @y(pongScreen.height / 2)
     @x(pongScreen.width /2)

@@ -202,6 +202,7 @@ Ball = (function(superClass) {
   };
 
   Ball.prototype.restart = function() {
+    $("#score").text(scores[0] + " - " + scores[1]);
     this.y(pongScreen.height / 2);
     return this.x(pongScreen.width / 2);
   };
@@ -234,13 +235,18 @@ scores = [0, 0];
 objects = null;
 
 $(function() {
-  var socket;
+  var paused, score, socket;
   objects = [
     new Player($("#player1"), true), new Player($("#player2")), new Ball($(".ball"), {
       x: 200,
       y: -200
     })
   ];
+  paused = $("#paused");
+  paused.css("left", pongScreen.width / 2 - paused.width() / 2);
+  score = $("#score");
+  $("#score").text(scores[0] + " - " + scores[1]);
+  score.css("left", pongScreen.width / 2 - score.width() / 2);
   setInterval(function() {
     var i, len, object, results;
     results = [];
@@ -258,8 +264,9 @@ $(function() {
     return events.other[data] = false;
   });
   $(document).on("keydown", function(event) {
-    if (event.keyCode === keyCodes.p && events[event.keyCode]) {
+    if (event.keyCode === keyCodes.p) {
       events[event.keyCode] = !events[event.keyCode];
+      $("#paused").toggle();
     } else {
       events[event.keyCode] = true;
     }
