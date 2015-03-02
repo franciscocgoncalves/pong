@@ -1,9 +1,28 @@
 .screen
   margin: 0 auto
-  background-color: black
+  background-image: url("clouds.jpg")
+  background-size: cover
+  background-repeat: no-repeat
   width: 854px
   height: 480px
   position: relative
+
+#score
+  color: gray
+  font-family: "impact"
+  font-size: 30
+  position: absolute
+  top: 10px
+  z-index: 1
+  
+#paused
+  display: none
+  color: gray
+  font-family: "impact"
+  font-size: 60
+  position: absolute
+  top: 100px
+  z-index: 1
 
 .player
   width: 20px
@@ -11,13 +30,12 @@
   position: absolute
 
 .ball
-  width: 60px
+  width: 40px
   height: 60px
-  border-radius: 50%
+  position: absolute
 
 .img
   background-image: url("ovelha_balao.png")
-
   background-size: contain
   background-repeat: no-repeat
-  background-position: 70%
+
