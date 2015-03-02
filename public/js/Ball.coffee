@@ -9,10 +9,9 @@ class Ball extends Object
   _update: ->
     collision = false
 
-    for object in objects when not(object instanceof Ball) and @checkCollision(object)
-      if not collision
-        @speed.x *= -1
-        collision = true
+    for object in objects when not collision and not(object instanceof Ball) and @checkCollision(object)
+      @speed.x *= -1
+      collision = true
 
     @move()
 

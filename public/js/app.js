@@ -180,12 +180,11 @@ Ball = (function(superClass) {
     collision = false;
     for (i = 0, len = objects.length; i < len; i++) {
       object = objects[i];
-      if (!(object instanceof Ball) && this.checkCollision(object)) {
-        if (!collision) {
-          this.speed.x *= -1;
-          collision = true;
-        }
+      if (!(!collision && !(object instanceof Ball) && this.checkCollision(object))) {
+        continue;
       }
+      this.speed.x *= -1;
+      collision = true;
     }
     return this.move();
   };
