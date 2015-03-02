@@ -131,14 +131,14 @@ Player = (function(superClass) {
   Player.prototype.moveUp = function() {
     return this.move({
       x: 0,
-      y: 200
+      y: 400
     });
   };
 
   Player.prototype.moveDown = function() {
     return this.move({
       x: 0,
-      y: -200
+      y: -400
     });
   };
 
