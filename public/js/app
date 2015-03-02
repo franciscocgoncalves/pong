@@ -183,16 +183,13 @@ $ ->
     console.log "him: up:", keyCode, Date.now()
 
   $(document).on "keydown", (event) ->
-    if not events[event.keyCode]
-      events[event.keyCode] = true
+    if not events[event.keyCode] || event.keyCode == keyCodes.p
+      events[event.keyCode] = !events[event.keyCode]
       socket.emit "keydown", event.keyCode
       console.log "me: down:", event.keyCode, Date.now()
 
-      if event.keyCode == keyCodes.p
-        $("#paused").toggle()
-
   $(document).on "keyup", (event) ->
-    if events[event.keyCode]
+    if events[event.keyCode] && event.keyCode != keyCodes.p
       events[event.keyCode] = false
       socket.emit "keyup", event.keyCode
       console.log "me: up:", event.keyCode, Date.now()

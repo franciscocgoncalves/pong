@@ -266,17 +266,14 @@ $(function() {
     return console.log("him: up:", keyCode, Date.now());
   });
   $(document).on("keydown", function(event) {
-    if (!events[event.keyCode]) {
-      events[event.keyCode] = true;
+    if (!events[event.keyCode] || event.keyCode === keyCodes.p) {
+      events[event.keyCode] = !events[event.keyCode];
       socket.emit("keydown", event.keyCode);
-      console.log("me: down:", event.keyCode, Date.now());
-      if (event.keyCode === keyCodes.p) {
-        return $("#paused").toggle();
-      }
+      return console.log("me: down:", event.keyCode, Date.now());
     }
   });
   return $(document).on("keyup", function(event) {
-    if (events[event.keyCode]) {
+    if (events[event.keyCode] && event.keyCode !== keyCodes.p) {
       events[event.keyCode] = false;
       socket.emit("keyup", event.keyCode);
       return console.log("me: up:", event.keyCode, Date.now());
