@@ -46,7 +46,8 @@ class Object
 
     @delta = Date.now() - @updated
 
-    @_update()
+    if !events[keyCodes.p]
+      @_update()
 
     @updated = @updated + @delta
 

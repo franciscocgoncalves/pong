@@ -4,6 +4,7 @@
 keyCodes =
   w: 87
   s: 83
+  p: 80
 
 events = other: {}
 pongScreen = width: 854, height: 480
@@ -11,7 +12,6 @@ leftPlayer = 0
 rightPlayer = 1
 scores = [0, 0]
 objects = null
-ball = null
 
 $ ->
   objects = [
@@ -33,9 +33,13 @@ $ ->
     events.other[data] = false
 
   $(document).on "keydown", (event) ->
-    events[event.keyCode] = true
+    if event.keyCode == keyCodes.p && events[event.keyCode]
+      events[event.keyCode] = !events[event.keyCode]
+    else 
+      events[event.keyCode] = true
     socket.emit "keydown", event.keyCode
 
   $(document).on "keyup", (event) ->
-    events[event.keyCode] = false
-    socket.emit "keyup", event.keyCode
+    if event.keyCode != keyCodes.p
+      events[event.keyCode] = false
+      socket.emit "keyup", event.keyCode
