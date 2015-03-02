@@ -54,7 +54,6 @@ startServer = function() {
     }
     socket.on("keydown", function(data) {
       var j, len1, ref, results, s;
-      console.log(socket.id, "down:", data);
       ref = games[socket.gameId];
       results = [];
       for (j = 0, len1 = ref.length; j < len1; j++) {
@@ -67,7 +66,6 @@ startServer = function() {
     });
     return socket.on("keyup", function(data) {
       var j, len1, ref, results, s;
-      console.log(socket.id, "up:", data);
       ref = games[socket.gameId];
       results = [];
       for (j = 0, len1 = ref.length; j < len1; j++) {
