@@ -1,11 +1,11 @@
 #= require Object
 
 class Player extends Object
-  constructor: (@el, self) ->
+  constructor: (@el, @self) ->
     super @el
     @y(pongScreen.height / 2 - @height() / 2)
 
-    if (self?)
+    if @self?
       @x(20)
       @color("green")
     else
@@ -19,7 +19,13 @@ class Player extends Object
     @move x: 0, y: -200
 
   _update: ->
-    if events[keyCodes.w]
-      @moveUp()
-    if events[keyCodes.s]
-      @moveDown()
+    if @self?
+      if events[keyCodes.w]
+        @moveUp()
+      if events[keyCodes.s]
+        @moveDown()
+    else
+      if events.other[keyCodes.w]
+        @moveUp()
+      if events.other[keyCodes.s]
+        @moveDown()

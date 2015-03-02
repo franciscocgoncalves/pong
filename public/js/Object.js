@@ -93,7 +93,7 @@ Object = (function() {
   };
 
   Object.prototype.checkCollision = function(o) {
-    return !(o.left() > this.right() || this.left() > o.right() || o.up() > this.down() || this.up > o.down());
+    return o.right() > this.left() && o.down() > this.up() && o.left() < this.right() && this.o.up() < this.down();
   };
 
   Object.prototype.collisionX = function(p) {};

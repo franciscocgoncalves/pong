@@ -8,8 +8,7 @@
 .player {
   width: 20px;
   height: 200px;
-  position: absolute;
-  bottom: 50px; }
+  position: absolute; }
 
 .ball {
   width: 40px;

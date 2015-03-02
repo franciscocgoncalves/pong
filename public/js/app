@@ -81,11 +81,11 @@ class Object
 
 
 class Player extends Object
-  constructor: (@el, self) ->
+  constructor: (@el, @self) ->
     super @el
     @y(pongScreen.height / 2 - @height() / 2)
 
-    if (self?)
+    if @self?
       @x(20)
       @color("green")
     else
@@ -99,10 +99,16 @@ class Player extends Object
     @move x: 0, y: -200
 
   _update: ->
-    if events[keyCodes.w]
-      @moveUp()
-    if events[keyCodes.s]
-      @moveDown()
+    if @self?
+      if events[keyCodes.w]
+        @moveUp()
+      if events[keyCodes.s]
+        @moveDown()
+    else
+      if events.other[keyCodes.w]
+        @moveUp()
+      if events.other[keyCodes.s]
+        @moveDown()
 
 
 
@@ -113,13 +119,11 @@ class Ball extends Object
     @x(pongScreen.width /2)
 
   _update: ->    
+    @speed.x = - @speed.x for object in objects when (!(object instanceof Ball) && @checkCollision(object)) isnt false 
     @move()
-    if @checkCollision(player1) || @checkCollision(player2) 
-      @speed.x = - @speed.x
-    
+
   collisionX: (p) ->
     @speed.x = - @speed.x
-    
     if p == leftPlayer
       scores[rightPlayer]++
       @restart()
@@ -140,27 +144,37 @@ keyCodes =
   w: 87
   s: 83
 
-events = {}
+events = other: {}
 pongScreen = width: 854, height: 480
 leftPlayer = 0
-player1 = null
-player2 = null
 rightPlayer = 1
 scores = [0, 0]
+objects = null
+ball = null
 
 $ ->
+  objects = [
+    new Player($("#player1"), true)
+    new Player($("#player2")),
+    new Ball($(".ball"), {x: 200, y: -200})
+  ]
+    
+  setInterval( ->
+    object.update() for object in objects
+  , 100 / 6)
+
+  socket = io location.origin
+
+  socket.on "keydown", (data) ->
+    events.other[data] = true
+
+  socket.on "keyup", (data) ->
+    events.other[data] = false
+
   $(document).on "keydown", (event) ->
     events[event.keyCode] = true
+    socket.emit "keydown", event.keyCode
 
   $(document).on "keyup", (event) ->
     events[event.keyCode] = false
-
-  player1 = new Player($("#player1"), true)
-  player2 = new Player($("#player2"))
-  ball = new Ball($(".ball"), {x: 200, y: -200})
-  
-  setInterval( ->
-    player1.update()
-    ball.update()
-  , 100 / 6)
-
+    socket.emit "keyup", event.keyCode

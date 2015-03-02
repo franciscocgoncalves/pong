@@ -15,10 +15,14 @@ Ball = (function(superClass) {
   }
 
   Ball.prototype._update = function() {
-    this.move();
-    if (this.checkCollision(player1) || this.checkCollision(player2)) {
-      return this.speed.x = -this.speed.x;
+    var i, len, object;
+    for (i = 0, len = objects.length; i < len; i++) {
+      object = objects[i];
+      if ((!(object instanceof Ball) && this.checkCollision(object)) !== false) {
+        this.speed.x = -this.speed.x;
+      }
     }
+    return this.move();
   };
 
   Ball.prototype.collisionX = function(p) {

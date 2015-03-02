@@ -8,9 +8,10 @@ Player = (function(superClass) {
 
   function Player(el, self) {
     this.el = el;
+    this.self = self;
     Player.__super__.constructor.call(this, this.el);
     this.y(pongScreen.height / 2 - this.height() / 2);
-    if ((self != null)) {
+    if (this.self != null) {
       this.x(20);
       this.color("green");
     } else {
@@ -34,11 +35,20 @@ Player = (function(superClass) {
   };
 
   Player.prototype._update = function() {
-    if (events[keyCodes.w]) {
-      this.moveUp();
-    }
-    if (events[keyCodes.s]) {
-      return this.moveDown();
+    if (this.self != null) {
+      if (events[keyCodes.w]) {
+        this.moveUp();
+      }
+      if (events[keyCodes.s]) {
+        return this.moveDown();
+      }
+    } else {
+      if (events.other[keyCodes.w]) {
+        this.moveUp();
+      }
+      if (events.other[keyCodes.s]) {
+        return this.moveDown();
+      }
     }
   };
 

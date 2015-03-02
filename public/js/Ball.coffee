@@ -7,13 +7,11 @@ class Ball extends Object
     @x(pongScreen.width /2)
 
   _update: ->    
+    @speed.x = - @speed.x for object in objects when (!(object instanceof Ball) && @checkCollision(object)) isnt false 
     @move()
-    if @checkCollision(player1) || @checkCollision(player2) 
-      @speed.x = - @speed.x
-    
+
   collisionX: (p) ->
     @speed.x = - @speed.x
-    
     if p == leftPlayer
       scores[rightPlayer]++
       @restart()
