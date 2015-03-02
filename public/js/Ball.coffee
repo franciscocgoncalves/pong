@@ -6,8 +6,14 @@ class Ball extends Object
     @y(pongScreen.height / 2)
     @x(pongScreen.width /2)
 
-  _update: ->    
-    @speed.x = - @speed.x for object in objects when (!(object instanceof Ball) && @checkCollision(object)) isnt false 
+  _update: ->
+    collision = false
+
+    for object in objects when not(object instanceof Ball) and @checkCollision(object)
+      if not collision
+        @speed.x *= -1
+        collision = true
+
     @move()
 
   collisionX: (p) ->
@@ -18,11 +24,11 @@ class Ball extends Object
     else if p == rightPlayer
       scores[leftPlayer]++
       @restart()
-    
+
   collisionY: ->
     @speed.y = - @speed.y
-    
+
   restart: ->
-    $("#score").text(scores[0] + " - " + scores[1]); 
+    $("#score").text(scores[0] + " - " + scores[1]);
     @y(pongScreen.height / 2)
-    @x(pongScreen.width /2)
+    @x(pongScreen.width / 2)

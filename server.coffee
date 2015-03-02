@@ -1,4 +1,5 @@
 exec = require("child_process").exec
+spawn = require("child_process").spawn
 Hapi = require "hapi"
 SocketIO = require "socket.io"
 
@@ -6,11 +7,12 @@ isDev = process.argv[2]
 
 exec "npm i", ->
   if isDev
-    exec "jade -w ."
-    exec "sass -w ."
+    spawn "jade", ["-w", "./public/templates"], stdio: "inherit"
+    spawn "sass", ["-w", "./public/stylesheets"], stdio: "inherit"
     exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
-      exec "coffee -cb ./public/js/app", ->
-        startServer()
+      spawn("coffee", ["-cb", "./public/js/app"], stdio: "inherit").on "close", ->
+        exec "rm -rf ./public/js/app", ->
+          startServer()
   else
     startServer()
 
@@ -28,8 +30,12 @@ startServer = ->
       game.push(socket)
       socket.gameId = id
 
+      ballSpeed = x: 100 + parseInt(Math.random() * 101)
+      ballSpeed.y = parseInt(Math.sqrt(400**2 - ballSpeed.x**2))
+
       for socket in game
-        socket.emit("start")
+        socket.emit "ready", ballSpeed
+        ballSpeed.x = - ballSpeed.x
 
     if not found
       games[socket.id] = [socket]

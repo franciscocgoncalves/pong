@@ -13,10 +13,10 @@ class Player extends Object
       @color("red")
 
   moveUp: ->
-    @move x: 0, y: 200
+    @move x: 0, y: 300
 
   moveDown: ->
-    @move x: 0, y: -200
+    @move x: 0, y: -300
 
   _update: ->
     if @self?
