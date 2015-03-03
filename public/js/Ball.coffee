@@ -9,22 +9,22 @@ class Ball extends Object
   _update: ->
     collision = false
 
-    for object in objects when not collision and not(object instanceof Ball) and @checkCollision(object)      
-      
-      @speed.x *= -1 
+    for object in objects when not collision and not(object instanceof Ball) and @checkCollision(object)
+
+      @speed.x *= -1
 
       if @speed.x > 0
-        @x object.right() 
-      else 
+        @x object.right()
+      else
         @x object.left() - @width()
-                
+
       collision = true
 
     if @speed.x < 0
       @el.addClass("inverted")
     else
       @el.removeClass("inverted")
-      
+
     @move()
 
   collisionX: (p) ->
@@ -40,6 +40,5 @@ class Ball extends Object
     @speed.y = - @speed.y
 
   restart: ->
-    $("#score").text(scores[0] + " - " + scores[1]);
-    @y(pongScreen.height / 2)
-    @x(pongScreen.width / 2)
+    super()
+    $("#score").text(scores[0] + " - " + scores[1])

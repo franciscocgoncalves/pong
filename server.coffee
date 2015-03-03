@@ -34,12 +34,16 @@ startServer = ->
       ballSpeed.y = parseInt(Math.sqrt(400**2 - ballSpeed.x**2))
 
       for socket in game
-        socket.emit "start", ballSpeed
+        socket.emit "start", ballSpeed, (socket == game[0])
         ballSpeed.x = - ballSpeed.x
 
     if not found
       games[socket.id] = [socket]
       socket.gameId = socket.id
+
+    socket.on "ball", (x, y) ->
+      for s in games[socket.gameId] when s.id != socket.id
+        s.emit "ball", x, y
 
     socket.on "keydown", (data) ->
       for s in games[socket.gameId] when s.id != socket.id

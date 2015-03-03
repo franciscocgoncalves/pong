@@ -13,6 +13,7 @@ rightPlayer = 1
 scores = [0, 0]
 objects = null
 ready = paused = false
+host = false
 
 $ ->
   pausedText = $("#paused")
@@ -28,21 +29,35 @@ $ ->
     new Ball($(".ball"), {x: 200, y: -200})
   ]
 
+  frameCount = 0
+
   setInterval( ->
     if ready and not paused
       for object in objects
         object.update()
-  , 100 / 6)
+      if host
+        if ++frameCount >= 20
+          frameCount = 0
+          socket.emit "ball", objects[2].x(), objects[2].y()
+  , 1000 / 60)
 
   socket = io location.origin
 
-  socket.on "start", (speed) ->
+  socket.on "start", (speed, _host) ->
+    host = _host
     for object in objects when object instanceof Ball
       object.speed = speed
     ready = true
 
   socket.on "stop", ->
     ready = false
+
+    for object in objects
+      object.restart()
+
+  socket.on "ball", (x, y) ->
+    objects[2].x(x)
+    objects[2].y(y)
 
   socket.on "keydown", (keyCode) ->
     events.other[keyCode] = true

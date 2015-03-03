@@ -3,7 +3,8 @@
 class Player extends Object
   constructor: (@el, @self) ->
     super @el
-    @y(pongScreen.height / 2 - @height() / 2)
+    @restart()
+    @speed = x: 0, y : 400
 
     if @self?
       @x(20)
@@ -13,10 +14,10 @@ class Player extends Object
       @color("red")
 
   moveUp: ->
-    @move x: 0, y: 400
+    @move x: @speed.x, y: @speed.y
 
   moveDown: ->
-    @move x: 0, y: -400
+    @move x: @speed.x, y: - @speed.y
 
   _update: ->
     if @self?
@@ -29,3 +30,6 @@ class Player extends Object
         @moveUp()
       if events.other[keyCodes.s]
         @moveDown()
+
+  restart: ->
+    @restartY()

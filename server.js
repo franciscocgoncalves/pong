@@ -55,7 +55,7 @@ startServer = function() {
       ballSpeed.y = parseInt(Math.sqrt(Math.pow(400, 2) - Math.pow(ballSpeed.x, 2)));
       for (i = 0, len = game.length; i < len; i++) {
         socket = game[i];
-        socket.emit("start", ballSpeed);
+        socket.emit("start", ballSpeed, socket === game[0]);
         ballSpeed.x = -ballSpeed.x;
       }
     }
@@ -63,6 +63,18 @@ startServer = function() {
       games[socket.id] = [socket];
       socket.gameId = socket.id;
     }
+    socket.on("ball", function(x, y) {
+      var j, len1, ref, results, s;
+      ref = games[socket.gameId];
+      results = [];
+      for (j = 0, len1 = ref.length; j < len1; j++) {
+        s = ref[j];
+        if (s.id !== socket.id) {
+          results.push(s.emit("ball", x, y));
+        }
+      }
+      return results;
+    });
     socket.on("keydown", function(data) {
       var j, len1, ref, results, s;
       ref = games[socket.gameId];
