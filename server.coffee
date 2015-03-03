@@ -30,7 +30,7 @@ startServer = ->
       game.push(socket)
       socket.gameId = id
 
-      ballSpeed = x: 100 + parseInt(Math.random() * 101)
+      ballSpeed = x: 200 + parseInt(Math.random() * 101)
       ballSpeed.y = parseInt(Math.sqrt(400**2 - ballSpeed.x**2))
 
       for socket in game

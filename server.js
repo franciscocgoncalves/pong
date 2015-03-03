@@ -50,7 +50,7 @@ startServer = function() {
       game.push(socket);
       socket.gameId = id;
       ballSpeed = {
-        x: 100 + parseInt(Math.random() * 101)
+        x: 200 + parseInt(Math.random() * 101)
       };
       ballSpeed.y = parseInt(Math.sqrt(Math.pow(400, 2) - Math.pow(ballSpeed.x, 2)));
       for (i = 0, len = game.length; i < len; i++) {
