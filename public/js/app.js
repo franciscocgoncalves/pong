@@ -186,12 +186,17 @@ Player = (function(superClass) {
 })(Object);
 
 Ball = (function(superClass) {
+  var defaultSpeed;
+
   extend(Ball, superClass);
+
+  defaultSpeed = null;
 
   function Ball(el, speed1) {
     this.el = el;
     this.speed = speed1;
     Ball.__super__.constructor.call(this, this.el);
+    defaultSpeed = this.speed;
   }
 
   Ball.prototype._update = function() {
@@ -202,7 +207,9 @@ Ball = (function(superClass) {
       if (!(!collision && !(object instanceof Ball) && this.checkCollision(object))) {
         continue;
       }
-      this.speed.x *= -1;
+      this.speed.x *= -1.1;
+      this.speed.y *= 1.1;
+      this.speed.y += object.speed.y / 4;
       if (this.speed.x > 0) {
         this.x(object.right());
       } else {
@@ -230,11 +237,20 @@ Ball = (function(superClass) {
   };
 
   Ball.prototype.collisionY = function() {
-    return this.speed.y = -this.speed.y;
+    return this.speed.y = -0.8 * this.speed.y;
   };
 
   Ball.prototype.restart = function() {
     Ball.__super__.restart.call(this);
+    if (defaultSpeed) {
+      this.speed.x = defaultSpeed.x;
+    }
+    if (defaultSpeed) {
+      this.speed.y = defaultSpeed.y;
+    }
+    if (defaultSpeed) {
+      console.log("AFINAL HA!!!");
+    }
     return updateScores();
   };
 
