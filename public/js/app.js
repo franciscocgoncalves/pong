@@ -184,7 +184,17 @@ Ball = (function(superClass) {
         continue;
       }
       this.speed.x *= -1;
+      if (this.speed.x > 0) {
+        this.x(object.right());
+      } else {
+        this.x(object.left() - this.width());
+      }
       collision = true;
+    }
+    if (this.speed.x < 0) {
+      this.el.addClass("inverted");
+    } else {
+      this.el.removeClass("inverted");
     }
     return this.move();
   };
