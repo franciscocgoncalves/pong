@@ -36,14 +36,21 @@ $ ->
 
   socket = io location.origin
 
-  socket.on "ready", (speed) ->
+  socket.on "start", (speed) ->
     for object in objects when object instanceof Ball
       object.speed = speed
     ready = true
 
+  socket.on "stop", ->
+    ready = false
+
   socket.on "keydown", (keyCode) ->
     events.other[keyCode] = true
     console.log "him: down:", keyCode, Date.now()
+
+    if keyCode == keyCodes.p
+      paused = !paused
+      $("#paused").toggle()
 
   socket.on "keyup", (keyCode) ->
     events.other[keyCode] = false

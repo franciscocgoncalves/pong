@@ -13,12 +13,8 @@ isDev = process.argv[2];
 
 exec("npm i", function() {
   if (isDev) {
-    spawn("jade", ["-w", "./public/templates"], {
-      stdio: "inherit"
-    });
-    spawn("sass", ["-w", "./public/stylesheets"], {
-      stdio: "inherit"
-    });
+    spawn("jade", ["-w", "./public/templates"]);
+    spawn("sass", ["-w", "./public/stylesheets"]);
     return exec("coffeescript-concat -I ./public/js -o ./public/js/app", function() {
       return spawn("coffee", ["-cb", "./public/js/app"], {
         stdio: "inherit"
@@ -42,7 +38,7 @@ startServer = function() {
   });
   games = {};
   io = SocketIO.listen(server.listener);
-  io.on("connection", function(socket) {
+  io.on("connect", function(socket) {
     var ballSpeed, found, game, i, id, len;
     found = false;
     for (id in games) {
@@ -59,7 +55,7 @@ startServer = function() {
       ballSpeed.y = parseInt(Math.sqrt(Math.pow(400, 2) - Math.pow(ballSpeed.x, 2)));
       for (i = 0, len = game.length; i < len; i++) {
         socket = game[i];
-        socket.emit("ready", ballSpeed);
+        socket.emit("start", ballSpeed);
         ballSpeed.x = -ballSpeed.x;
       }
     }
@@ -79,7 +75,7 @@ startServer = function() {
       }
       return results;
     });
-    return socket.on("keyup", function(data) {
+    socket.on("keyup", function(data) {
       var j, len1, ref, results, s;
       ref = games[socket.gameId];
       results = [];
@@ -90,6 +86,24 @@ startServer = function() {
         }
       }
       return results;
+    });
+    return socket.on("disconnect", function() {
+      var j, len1, ref, results, s;
+      if (games[socket.gameId].length < 2) {
+        return delete games[socket.gameId];
+      } else {
+        ref = games[socket.gameId];
+        results = [];
+        for (j = 0, len1 = ref.length; j < len1; j++) {
+          s = ref[j];
+          if (!(s.id !== socket.id)) {
+            continue;
+          }
+          s.emit("stop");
+          results.push(games[socket.gameId] = [s]);
+        }
+        return results;
+      }
     });
   });
   server.route({

@@ -264,7 +264,7 @@ $(function() {
     }
   }, 100 / 6);
   socket = io(location.origin);
-  socket.on("ready", function(speed) {
+  socket.on("start", function(speed) {
     var i, len, object;
     for (i = 0, len = objects.length; i < len; i++) {
       object = objects[i];
@@ -274,9 +274,16 @@ $(function() {
     }
     return ready = true;
   });
+  socket.on("stop", function() {
+    return ready = false;
+  });
   socket.on("keydown", function(keyCode) {
     events.other[keyCode] = true;
-    return console.log("him: down:", keyCode, Date.now());
+    console.log("him: down:", keyCode, Date.now());
+    if (keyCode === keyCodes.p) {
+      paused = !paused;
+      return $("#paused").toggle();
+    }
   });
   socket.on("keyup", function(keyCode) {
     events.other[keyCode] = false;

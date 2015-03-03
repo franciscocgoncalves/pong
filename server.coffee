@@ -7,8 +7,8 @@ isDev = process.argv[2]
 
 exec "npm i", ->
   if isDev
-    spawn "jade", ["-w", "./public/templates"], stdio: "inherit"
-    spawn "sass", ["-w", "./public/stylesheets"], stdio: "inherit"
+    spawn "jade", ["-w", "./public/templates"]#, stdio: "inherit"
+    spawn "sass", ["-w", "./public/stylesheets"]#, stdio: "inherit"
     exec "coffeescript-concat -I ./public/js -o ./public/js/app", ->
       spawn("coffee", ["-cb", "./public/js/app"], stdio: "inherit").on "close", ->
         exec "rm -rf ./public/js/app", ->
@@ -23,7 +23,7 @@ startServer = ->
   games = {}
 
   io = SocketIO.listen server.listener
-  io.on "connection", (socket) ->
+  io.on "connect", (socket) ->
     found = false
     for id, game of games when game.length < 2
       found = true
@@ -34,7 +34,7 @@ startServer = ->
       ballSpeed.y = parseInt(Math.sqrt(400**2 - ballSpeed.x**2))
 
       for socket in game
-        socket.emit "ready", ballSpeed
+        socket.emit "start", ballSpeed
         ballSpeed.x = - ballSpeed.x
 
     if not found
@@ -48,6 +48,14 @@ startServer = ->
     socket.on "keyup", (data) ->
       for s in games[socket.gameId] when s.id != socket.id
         s.emit "keyup", data
+
+    socket.on "disconnect", ->
+      if games[socket.gameId].length < 2
+        delete games[socket.gameId]
+      else
+        for s in games[socket.gameId] when s.id != socket.id
+          s.emit "stop"
+          games[socket.gameId] = [s]
 
   server.route
     method: "GET"
