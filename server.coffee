@@ -41,9 +41,13 @@ startServer = ->
       games[socket.id] = [socket]
       socket.gameId = socket.id
 
-    socket.on "ball", (x, y) ->
+    socket.on "ball", (x, y, speed) ->
       for s in games[socket.gameId] when s.id != socket.id
-        s.emit "ball", x, y
+        s.emit "ball", x, y, speed
+
+    socket.on "scores", (scores) ->
+      for s in games[socket.gameId] when s.id != socket.id
+        s.emit "scores", scores
 
     socket.on "keydown", (data) ->
       for s in games[socket.gameId] when s.id != socket.id

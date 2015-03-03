@@ -63,14 +63,26 @@ startServer = function() {
       games[socket.id] = [socket];
       socket.gameId = socket.id;
     }
-    socket.on("ball", function(x, y) {
+    socket.on("ball", function(x, y, speed) {
       var j, len1, ref, results, s;
       ref = games[socket.gameId];
       results = [];
       for (j = 0, len1 = ref.length; j < len1; j++) {
         s = ref[j];
         if (s.id !== socket.id) {
-          results.push(s.emit("ball", x, y));
+          results.push(s.emit("ball", x, y, speed));
+        }
+      }
+      return results;
+    });
+    socket.on("scores", function(scores) {
+      var j, len1, ref, results, s;
+      ref = games[socket.gameId];
+      results = [];
+      for (j = 0, len1 = ref.length; j < len1; j++) {
+        s = ref[j];
+        if (s.id !== socket.id) {
+          results.push(s.emit("scores", scores));
         }
       }
       return results;

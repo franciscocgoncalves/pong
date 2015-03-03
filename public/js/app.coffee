@@ -10,18 +10,23 @@ events = other: {}
 pongScreen = width: 854, height: 480
 leftPlayer = 0
 rightPlayer = 1
-scores = [0, 0]
-objects = null
-ready = paused = false
-host = false
+scores = socket = objects = updateScores = null
+ready = paused = host = false
 
 $ ->
   pausedText = $("#paused")
   pausedText.css("left", pongScreen.width / 2 - pausedText.width() / 2)
 
   scoreText = $("#score")
-  scoreText.text(scores[0] + " - " + scores[1]);
-  scoreText.css("left", pongScreen.width / 2 - scoreText.width() / 2)
+  updateScores = (_scores) ->
+    scores = _scores or scores
+    if host or _scores?
+      scoreText.text(scores[0] + " - " + scores[1])
+      scoreText.css("left", pongScreen.width / 2 - scoreText.width() / 2)
+
+      if host
+        socket.emit "scores", scores
+  updateScores([0, 0])
 
   objects = [
     new Player($("#player1"), true)
@@ -36,9 +41,9 @@ $ ->
       for object in objects
         object.update()
       if host
-        if ++frameCount >= 20
+        if ++frameCount >= 1
           frameCount = 0
-          socket.emit "ball", objects[2].x(), objects[2].y()
+          socket.emit "ball", objects[2].x(), objects[2].y(), objects[2].speed
   , 1000 / 60)
 
   socket = io location.origin
@@ -51,13 +56,17 @@ $ ->
 
   socket.on "stop", ->
     ready = false
-
+    updateScores([0, 0])
     for object in objects
       object.restart()
 
-  socket.on "ball", (x, y) ->
-    objects[2].x(x)
+  socket.on "ball", (x, y, speed) ->
+    objects[2].x(pongScreen.width - x)
     objects[2].y(y)
+    objects[2].speed = x: - speed.x, y: speed.y
+
+  socket.on "scores", (scores) ->
+    updateScores(scores)
 
   socket.on "keydown", (keyCode) ->
     events.other[keyCode] = true

@@ -1,5 +1,6 @@
 class Object
   constructor: (@el) ->
+    @restart()
 
   color: (color) ->
     if color?

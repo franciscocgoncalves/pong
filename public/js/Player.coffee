@@ -3,7 +3,6 @@
 class Player extends Object
   constructor: (@el, @self) ->
     super @el
-    @restart()
     @speed = x: 0, y : 400
 
     if @self?
