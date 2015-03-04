@@ -2,8 +2,8 @@
 
 class Ball extends Object
   constructor: (@el, @speed) ->
-    super @el
     @defaultSpeed = x: @speed.x, y: @speed.y
+    super @el
 
   _update: ->
     collision = false
