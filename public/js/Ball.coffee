@@ -46,6 +46,5 @@ class Ball extends Object
     super()
     @speed.x = defaultSpeed.x if defaultSpeed
     @speed.y = defaultSpeed.y if defaultSpeed
-    if defaultSpeed
-      console.log "AFINAL HA!!!"
+    
     updateScores()
