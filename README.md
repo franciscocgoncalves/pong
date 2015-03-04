@@ -2,6 +2,9 @@
 Pong Game for lunacloud Hackathon
 
 ## Usage
-`sudo npm install` - create and push a backup immediately.
+`sudo npm install`
 
-`sudo npm start` - create and push a backup immediately and schedule a backup every 12 hours.
+`sudo npm start`
+
+## Play it
+  Give this [url](http://pong.diogopais.com) to a friend and HAVE FUN!
