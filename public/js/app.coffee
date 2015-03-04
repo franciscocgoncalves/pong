@@ -61,9 +61,10 @@ $ ->
       object.restart()
 
   socket.on "ball", (x, y, speed) ->
-    objects[2].x(pongScreen.width - x)
-    objects[2].y(y)
-    objects[2].speed = x: - speed.x, y: speed.y
+    ball = objects[2]
+    ball.x(pongScreen.width - x - ball.width())
+    ball.y(y)
+    ball.speed = x: - speed.x, y: speed.y
 
   socket.on "scores", (scores) ->
     updateScores(scores)

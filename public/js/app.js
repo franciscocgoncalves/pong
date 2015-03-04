@@ -343,9 +343,11 @@ $(function() {
     return results;
   });
   socket.on("ball", function(x, y, speed) {
-    objects[2].x(pongScreen.width - x);
-    objects[2].y(y);
-    return objects[2].speed = {
+    var ball;
+    ball = objects[2];
+    ball.x(pongScreen.width - x - ball.width());
+    ball.y(y);
+    return ball.speed = {
       x: -speed.x,
       y: speed.y
     };
