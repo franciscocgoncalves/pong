@@ -67,7 +67,7 @@ $ ->
     ball.speed = x: - speed.x, y: speed.y
 
   socket.on "scores", (scores) ->
-    updateScores(scores)
+    updateScores(scores.reverse())
 
   socket.on "keydown", (keyCode) ->
     events.other[keyCode] = true

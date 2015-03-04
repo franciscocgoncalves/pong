@@ -1,21 +1,20 @@
 #= require Object
 
 class Ball extends Object
-  defaultSpeed = null
-  
   constructor: (@el, @speed) ->
     super @el
-    defaultSpeed = @speed
-    
+    @defaultSpeed = @speed
+
   _update: ->
     collision = false
 
     for object in objects when not collision and not(object instanceof Ball) and @checkCollision(object)
-      @speed.x *= -1.1
-      @speed.y *= 1.1
-   
-      @speed.y += (object.speed.y / 4)
-      
+      @speed.x *= -1.05
+      @speed.y *= 1.05
+
+      for object in objects when object instanceof Player
+        object.speed.y *= 1.05
+
       if @speed.x > 0
         @x object.right()
       else
@@ -30,22 +29,18 @@ class Ball extends Object
 
     @move()
 
-  collisionX: (p) ->
+  collisionX: (player) ->
     @speed.x = - @speed.x
-    if p == leftPlayer
-      scores[rightPlayer]++
-      @restart()
-    else if p == rightPlayer
-      scores[leftPlayer]++
-      @restart()
+    if player is leftPlayer or player is rightPlayer
+      scores[player]++
+      for object in objects
+          object.restart()
 
   collisionY: ->
-    @speed.y = - 0.8 * @speed.y
+    @speed.y *= -0.95
 
   restart: ->
     super()
-    @speed.x = defaultSpeed.x if defaultSpeed
-    @speed.y = defaultSpeed.y if defaultSpeed
-    if defaultSpeed
-      console.log "AFINAL HA!!!"
+    @speed.x = @defaultSpeed.x if @defaultSpeed
+    @speed.y = @defaultSpeed.y if @defaultSpeed
     updateScores()

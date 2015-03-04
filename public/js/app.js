@@ -104,7 +104,7 @@ Object = (function() {
     return true;
   };
 
-  Object.prototype.collisionX = function(p) {};
+  Object.prototype.collisionX = function() {};
 
   Object.prototype.collisionY = function() {};
 
@@ -131,11 +131,15 @@ Player = (function(superClass) {
   function Player(el, self) {
     this.el = el;
     this.self = self;
-    Player.__super__.constructor.call(this, this.el);
+    this.defaultSpeed = {
+      x: 0,
+      y: 400
+    };
     this.speed = {
       x: 0,
       y: 400
     };
+    Player.__super__.constructor.call(this, this.el);
     if (this.self != null) {
       this.x(20);
       this.color("green");
@@ -178,6 +182,8 @@ Player = (function(superClass) {
   };
 
   Player.prototype.restart = function() {
+    this.speed.x = this.defaultSpeed.x;
+    this.speed.y = this.defaultSpeed.y;
     return this.restartY();
   };
 
@@ -186,30 +192,31 @@ Player = (function(superClass) {
 })(Object);
 
 Ball = (function(superClass) {
-  var defaultSpeed;
-
   extend(Ball, superClass);
-
-  defaultSpeed = null;
 
   function Ball(el, speed1) {
     this.el = el;
     this.speed = speed1;
     Ball.__super__.constructor.call(this, this.el);
-    defaultSpeed = this.speed;
+    this.defaultSpeed = this.speed;
   }
 
   Ball.prototype._update = function() {
-    var collision, i, len, object;
+    var collision, i, j, len, len1, object;
     collision = false;
     for (i = 0, len = objects.length; i < len; i++) {
       object = objects[i];
       if (!(!collision && !(object instanceof Ball) && this.checkCollision(object))) {
         continue;
       }
-      this.speed.x *= -1.1;
-      this.speed.y *= 1.1;
-      this.speed.y += object.speed.y / 4;
+      this.speed.x *= -1.05;
+      this.speed.y *= 1.05;
+      for (j = 0, len1 = objects.length; j < len1; j++) {
+        object = objects[j];
+        if (object instanceof Player) {
+          object.speed.y *= 1.05;
+        }
+      }
       if (this.speed.x > 0) {
         this.x(object.right());
       } else {
@@ -225,31 +232,31 @@ Ball = (function(superClass) {
     return this.move();
   };
 
-  Ball.prototype.collisionX = function(p) {
+  Ball.prototype.collisionX = function(player) {
+    var i, len, object, results;
     this.speed.x = -this.speed.x;
-    if (p === leftPlayer) {
-      scores[rightPlayer]++;
-      return this.restart();
-    } else if (p === rightPlayer) {
-      scores[leftPlayer]++;
-      return this.restart();
+    if (player === leftPlayer || player === rightPlayer) {
+      scores[player]++;
+      results = [];
+      for (i = 0, len = objects.length; i < len; i++) {
+        object = objects[i];
+        results.push(object.restart());
+      }
+      return results;
     }
   };
 
   Ball.prototype.collisionY = function() {
-    return this.speed.y = -0.8 * this.speed.y;
+    return this.speed.y *= -0.95;
   };
 
   Ball.prototype.restart = function() {
     Ball.__super__.restart.call(this);
-    if (defaultSpeed) {
-      this.speed.x = defaultSpeed.x;
+    if (this.defaultSpeed) {
+      this.speed.x = this.defaultSpeed.x;
     }
-    if (defaultSpeed) {
-      this.speed.y = defaultSpeed.y;
-    }
-    if (defaultSpeed) {
-      console.log("AFINAL HA!!!");
+    if (this.defaultSpeed) {
+      this.speed.y = this.defaultSpeed.y;
     }
     return updateScores();
   };
@@ -353,7 +360,7 @@ $(function() {
     };
   });
   socket.on("scores", function(scores) {
-    return updateScores(scores);
+    return updateScores(scores.reverse());
   });
   socket.on("keydown", function(keyCode) {
     events.other[keyCode] = true;

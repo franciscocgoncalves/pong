@@ -2,8 +2,9 @@
 
 class Player extends Object
   constructor: (@el, @self) ->
-    super @el
+    @defaultSpeed = x: 0, y : 400
     @speed = x: 0, y : 400
+    super @el
 
     if @self?
       @x(20)
@@ -31,4 +32,6 @@ class Player extends Object
         @moveDown()
 
   restart: ->
+    @speed.x = @defaultSpeed.x
+    @speed.y = @defaultSpeed.y
     @restartY()

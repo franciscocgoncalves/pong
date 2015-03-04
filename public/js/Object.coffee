@@ -77,14 +77,13 @@ class Object
       return false
     return true
 
-  collisionX: (p) ->
+  collisionX:  ->
 
   collisionY: ->
 
   restart: ->
     @restartX()
     @restartY()
-
 
   restartX: ->
     @x(pongScreen.width / 2 - @width() / 2)
