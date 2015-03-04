@@ -31,7 +31,7 @@ $ ->
   objects = [
     new Player($("#player1"), true)
     new Player($("#player2"))
-    new Ball($(".ball"), {x: 200, y: -200})
+    new Ball($(".ball"), {x: 275, y: -275})
   ]
 
   frameCount = 0

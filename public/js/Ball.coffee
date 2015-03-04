@@ -3,6 +3,7 @@
 class Ball extends Object
   constructor: (@el, @speed) ->
     @defaultSpeed = x: @speed.x, y: @speed.y
+    console.log @defaultSpeed
     super @el
 
   _update: ->
