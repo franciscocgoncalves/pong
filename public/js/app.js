@@ -197,11 +197,11 @@ Ball = (function(superClass) {
   function Ball(el, speed1) {
     this.el = el;
     this.speed = speed1;
-    Ball.__super__.constructor.call(this, this.el);
     this.defaultSpeed = {
       x: this.speed.x,
       y: this.speed.y
     };
+    Ball.__super__.constructor.call(this, this.el);
   }
 
   Ball.prototype._update = function() {
