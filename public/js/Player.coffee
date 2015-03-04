@@ -3,7 +3,6 @@
 class Player extends Object
   constructor: (@el, @self) ->
     @defaultSpeed = x: 0, y : 400
-    @speed = x: 0, y : 400
     super @el
 
     if @self?
@@ -14,17 +13,22 @@ class Player extends Object
       @color("red")
 
   moveUp: ->
-    @move x: @speed.x, y: @speed.y
+    @currentSpeed.y = @speed.y
+    @move @currentSpeed
 
   moveDown: ->
-    @move x: @speed.x, y: - @speed.y
+    @currentSpeed.y = - @speed.y
+    @move @currentSpeed
 
   _update: ->
     if @self?
-      if events[keyCodes.w]
-        @moveUp()
-      if events[keyCodes.s]
-        @moveDown()
+      if not events[keyCodes.w] and not events[keyCodes.s]
+        @currentSpeed.y = 0
+      else
+        if events[keyCodes.w]
+          @moveUp()
+        if events[keyCodes.s]
+          @moveDown()
     else
       if events.other[keyCodes.w]
         @moveUp()
@@ -33,5 +37,5 @@ class Player extends Object
 
   restart: ->
     @restartY()
-    @speed.x = @defaultSpeed.x
-    @speed.y = @defaultSpeed.y
+    @speed = x: @defaultSpeed.x, y: @defaultSpeed.y
+    @currentSpeed = x: 0, y: 0

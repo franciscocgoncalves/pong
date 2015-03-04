@@ -135,10 +135,6 @@ Player = (function(superClass) {
       x: 0,
       y: 400
     };
-    this.speed = {
-      x: 0,
-      y: 400
-    };
     Player.__super__.constructor.call(this, this.el);
     if (this.self != null) {
       this.x(20);
@@ -150,26 +146,26 @@ Player = (function(superClass) {
   }
 
   Player.prototype.moveUp = function() {
-    return this.move({
-      x: this.speed.x,
-      y: this.speed.y
-    });
+    this.currentSpeed.y = this.speed.y;
+    return this.move(this.currentSpeed);
   };
 
   Player.prototype.moveDown = function() {
-    return this.move({
-      x: this.speed.x,
-      y: -this.speed.y
-    });
+    this.currentSpeed.y = -this.speed.y;
+    return this.move(this.currentSpeed);
   };
 
   Player.prototype._update = function() {
     if (this.self != null) {
-      if (events[keyCodes.w]) {
-        this.moveUp();
-      }
-      if (events[keyCodes.s]) {
-        return this.moveDown();
+      if (!events[keyCodes.w] && !events[keyCodes.s]) {
+        return this.currentSpeed.y = 0;
+      } else {
+        if (events[keyCodes.w]) {
+          this.moveUp();
+        }
+        if (events[keyCodes.s]) {
+          return this.moveDown();
+        }
       }
     } else {
       if (events.other[keyCodes.w]) {
@@ -183,8 +179,14 @@ Player = (function(superClass) {
 
   Player.prototype.restart = function() {
     this.restartY();
-    this.speed.x = this.defaultSpeed.x;
-    return this.speed.y = this.defaultSpeed.y;
+    this.speed = {
+      x: this.defaultSpeed.x,
+      y: this.defaultSpeed.y
+    };
+    return this.currentSpeed = {
+      x: 0,
+      y: 0
+    };
   };
 
   return Player;
@@ -215,6 +217,7 @@ Ball = (function(superClass) {
       }
       this.speed.x *= -1.05;
       this.speed.y *= 1.05;
+      this.speed.y += (object.currentSpeed.y || 0) * 0.25;
       for (j = 0, len1 = objects.length; j < len1; j++) {
         object = objects[j];
         if (object instanceof Player) {

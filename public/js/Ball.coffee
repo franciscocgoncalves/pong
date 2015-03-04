@@ -13,6 +13,8 @@ class Ball extends Object
       @speed.x *= -1.05
       @speed.y *= 1.05
 
+      @speed.y += (object.currentSpeed.y or 0) * 0.25
+
       for object in objects when object instanceof Player
         object.speed.y *= 1.05
 
