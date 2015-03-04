@@ -3,7 +3,7 @@
 class Ball extends Object
   constructor: (@el, @speed) ->
     super @el
-    @defaultSpeed = @speed
+    @defaultSpeed = x: @speed.x, y: @speed.y
 
   _update: ->
     collision = false
@@ -41,6 +41,6 @@ class Ball extends Object
 
   restart: ->
     super()
-    @speed.x = @defaultSpeed.x if @defaultSpeed
-    @speed.y = @defaultSpeed.y if @defaultSpeed
+    @speed.x = @defaultSpeed.x
+    @speed.y = @defaultSpeed.y
     updateScores()

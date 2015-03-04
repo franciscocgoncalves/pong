@@ -32,6 +32,6 @@ class Player extends Object
         @moveDown()
 
   restart: ->
+    @restartY()
     @speed.x = @defaultSpeed.x
     @speed.y = @defaultSpeed.y
-    @restartY()

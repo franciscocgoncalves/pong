@@ -182,9 +182,9 @@ Player = (function(superClass) {
   };
 
   Player.prototype.restart = function() {
+    this.restartY();
     this.speed.x = this.defaultSpeed.x;
-    this.speed.y = this.defaultSpeed.y;
-    return this.restartY();
+    return this.speed.y = this.defaultSpeed.y;
   };
 
   return Player;
@@ -198,7 +198,10 @@ Ball = (function(superClass) {
     this.el = el;
     this.speed = speed1;
     Ball.__super__.constructor.call(this, this.el);
-    this.defaultSpeed = this.speed;
+    this.defaultSpeed = {
+      x: this.speed.x,
+      y: this.speed.y
+    };
   }
 
   Ball.prototype._update = function() {
@@ -252,12 +255,8 @@ Ball = (function(superClass) {
 
   Ball.prototype.restart = function() {
     Ball.__super__.restart.call(this);
-    if (this.defaultSpeed) {
-      this.speed.x = this.defaultSpeed.x;
-    }
-    if (this.defaultSpeed) {
-      this.speed.y = this.defaultSpeed.y;
-    }
+    this.speed.x = this.defaultSpeed.x;
+    this.speed.y = this.defaultSpeed.y;
     return updateScores();
   };
 
