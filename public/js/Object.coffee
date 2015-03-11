@@ -1,5 +1,5 @@
 class Object
-  constructor: (@el) ->
+  constructor: (@el, @gm) ->
     @restart()
 
   color: (color) ->
@@ -33,10 +33,10 @@ class Object
 
     if finalX < 0
       @x(0)
-      @collisionX(leftPlayer)
+      @collisionX(@gm.leftPlayer)
     else if finalX + @width() > pongScreen.width
       @x pongScreen.width - @width()
-      @collisionX(rightPlayer)
+      @collisionX(@gm.rightPlayer)
     else
       @x finalX
 
@@ -46,8 +46,8 @@ class Object
       return
 
     @delta = Date.now() - @updated
-
-    if !events[keyCodes.p]
+    
+    if !@gm.paused
       @_update()
 
     @updated = @updated + @delta

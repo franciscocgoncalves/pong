@@ -1,9 +1,9 @@
 #= require Object
 
 class Player extends Object
-  constructor: (@el, @self) ->
+  constructor: (@el, @self, @gm, @events) ->
     @defaultSpeed = x: 0, y : 400
-    super @el
+    super @el, @gm
 
     if @self?
       @x(20)
@@ -22,17 +22,17 @@ class Player extends Object
 
   _update: ->
     if @self?
-      if not events[keyCodes.w] and not events[keyCodes.s]
+      if not @events.events[@events.keyCodes.w] and not @events.events[@events.keyCodes.s]
         @currentSpeed.y = 0
       else
-        if events[keyCodes.w]
+        if @events.selfMovingUp()
           @moveUp()
-        if events[keyCodes.s]
+        if @events.selfMovingDown()
           @moveDown()
     else
-      if events.other[keyCodes.w]
+      if @events.otherMovingUp()
         @moveUp()
-      if events.other[keyCodes.s]
+      if @events.otherMovingDown()
         @moveDown()
 
   restart: ->
